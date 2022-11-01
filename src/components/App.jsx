@@ -20,14 +20,13 @@ export class App extends Component {
   searchQuery = search => {
     this.setState({ search });
   };
-    updatePage = () => {
-    this.setState((prevState) => ({ page: prevState.page + 1 }));
-    };
+  
   
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.search !== this.state.search) {
-          this.setState({ isLoading: true });
-      fetchPixabay(this.state.search)
+      this.setState({ isLoading: true }); //!!!!!!
+      fetchPixabay(this.props.search, this.state.page)
+       
         .then(data =>
           this.setState({
             picture: data.hits,
@@ -36,10 +35,12 @@ export class App extends Component {
           })
         )
         .catch(err => this.setState({ error: err.message }))
-       .finally(() => this.setState({ isLoading: false }));
+       .finally(() =>  this.setState({ isLoading: false }));
     }
   }
-
+  updatePage = () => {
+    this.setState((prevState) => ({ page: prevState.page + 1 }));
+    };
 
   render() {
     return (
@@ -47,7 +48,7 @@ export class App extends Component {
         <Searchbar searchQuery={this.searchQuery} />
         <ImageGallery picture={ this.state.picture} />
         {this.state.picture.length > 0 && <Button updatePage={this.updatePage} />}
- <Loader />  
+  { this.state.isLoading && <Loader />  }
       </div>
     );
   }
