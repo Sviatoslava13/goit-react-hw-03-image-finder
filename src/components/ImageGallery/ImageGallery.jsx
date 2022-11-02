@@ -4,7 +4,8 @@ import { Component } from 'react';
 import Loader from '../Loader/Loader';
 import Button from '../Button/Button';
 import fetchPixabay from '../PixabayAPI.js';
-import Modal from '../Modal/Modal'
+import PropTypes from 'prop-types';
+
 class ImageGallery extends Component {
   state = {
     search: '',
@@ -13,7 +14,6 @@ class ImageGallery extends Component {
     totalPages: 0,
     error: null,
     isLoading: false,
-    modalData: null,
   };
   static getDerivedStateFromProps(nextProps, state) {
     if (nextProps.search !== state.search) {
@@ -47,26 +47,31 @@ class ImageGallery extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
-    changeModalData = (modalData = null) => {
-    this.setState({ modalData });
-  };
-
-
   render() {
     return (
       <>
         <ul className={s.gallery}>
-          {this.state.picture.map(({ id, webformatURL, largeImageURL }) => (
-            <ImageGalleryItem key={id} webformatURL={webformatURL} largeImageURL={largeImageURL} clickModal={ this.changeModalData}/>
-          ))}
+          {this.state.picture.map(
+            ({ id, webformatURL, largeImageURL, tags }) => (
+              <ImageGalleryItem
+                key={id}
+                webformatURL={webformatURL}
+                largeImageURL={largeImageURL}
+                tags={tags}
+              />
+            )
+          )}
         </ul>
         {this.state.isLoading && <Loader />}
         {this.state.page < this.state.totalPages && (
           <Button updatePage={this.updatePage} />
         )}
-        {this.state.modalData && <Modal clickModal={ this.changeModalData}  />}
       </>
     );
   }
 }
+ImageGallery.propTypes = {
+  search: PropTypes.string.isRequired,
+  id: PropTypes.number,
+};
 export default ImageGallery;
