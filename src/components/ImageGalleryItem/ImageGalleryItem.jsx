@@ -4,23 +4,23 @@ import Modal from '../Modal/Modal';
 import PropTypes from 'prop-types';
 class ImageGalleryItem extends Component {
   state = {
-    modalData: false,
+    isOpenModal: false,
   };
-  changeModalData = () => {
-    this.setState(prevState => ({modalData: !prevState.modalData}));
+  toggelModal = () => {
+    this.setState(prevState => ({isOpenModal: !prevState.isOpenModal}));
   };
   render() {
     return (
       <li
         className={s.galleryItem}
-      onClick={this.changeModalData}
+      onClick={this.toggelModal}
       >
         <img
           className={s.galerryItemImage}
           src={this.props.webformatURL}
           alt={this.props.tags}
         />
-        {this.state.modalData && <Modal clickModal={this.changeModalData} img={this.props.largeImageURL} tags={ this.props.tags} />}
+        {this.state.isOpenModal && <Modal clickModal={this.toggelModal} img={this.props.largeImageURL} tags={ this.props.tags} />}
       </li>
     );
   }
